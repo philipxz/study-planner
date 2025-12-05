@@ -1,6 +1,11 @@
 import { useTasks } from '../context/TaskContext';
 import TaskItem from './TaskItem';
 
+function parseLocalDate(ymd) {
+  const [y, m, d] = ymd.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
 export default function TaskList({ onEditTask }) {
   const { tasks } = useTasks();
 
@@ -22,8 +27,8 @@ export default function TaskList({ onEditTask }) {
     if (!taskA.dueDate) return 1;
     if (!taskB.dueDate) return -1;
 
-    const dateA = new Date(taskA.dueDate);
-    const dateB = new Date(taskB.dueDate);
+    const dateA = parseLocalDate(taskA.dueDate);
+    const dateB = parseLocalDate(taskB.dueDate);
 
     if (dateA < dateB) return -1;
     if (dateA > dateB) return 1;
@@ -34,8 +39,8 @@ export default function TaskList({ onEditTask }) {
     return rankA - rankB;
   });
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
   const pastDueTasks = [];
   const todayTasks = [];
@@ -48,8 +53,7 @@ export default function TaskList({ onEditTask }) {
       return;
     }
 
-    const due = new Date(task.dueDate);
-    due.setHours(0, 0, 0, 0);
+    const due = parseLocalDate(task.dueDate);
 
     if (due < today) {
       pastDueTasks.push(task);
@@ -120,5 +124,5 @@ export default function TaskList({ onEditTask }) {
         </ul>
       </div>
     </div>
-    );
+  );
 }
