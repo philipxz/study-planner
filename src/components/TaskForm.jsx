@@ -16,6 +16,12 @@ export default function TaskForm({ initialTask, onSave, onCancel }) {
     setTask(initialTask || emptyTask);
   }, [initialTask]);
 
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  const todayStr = `${yyyy}-${mm}-${dd}`;
+
   function handleChange(e) {
     const { name, value } = e.target;
     setTask(prev => ({ ...prev, [name]: value }));
@@ -59,6 +65,7 @@ export default function TaskForm({ initialTask, onSave, onCancel }) {
               name="dueDate"
               value={task.dueDate}
               onChange={handleChange}
+              min={todayStr} 
               required
             />
           </label>

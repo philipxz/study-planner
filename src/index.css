@@ -437,6 +437,27 @@ h2 {
   color: var(--text);
 }
 
+.calendar-cell.today {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.calendar-cell.today .calendar-day-number {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.calendar-cell.past {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.calendar-cell.past:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--border);
+}
+
 .calendar-task-dots {
   display: flex;
   align-items: center;
@@ -539,4 +560,8 @@ h2 {
     justify-content: flex-end;
     width: 100%;
   }
+}
+
+html:not([data-theme='light']) input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }

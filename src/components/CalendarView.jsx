@@ -21,6 +21,18 @@ export default function CalendarView({ onAddTaskForDate }) {
     return `${y}-${mm}-${dd}`;
   }
 
+  const todayDateOnly = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate()
+  );
+
+  function formatDate(y, m, d) {
+    const mm = String(m + 1).padStart(2, '0');
+    const dd = String(d).padStart(2, '0');
+    return `${y}-${mm}-${dd}`;
+  }
+
   const tasksByDate = tasks.reduce((map, task) => {
     if (!task.dueDate) return map;
     if (!map[task.dueDate]) map[task.dueDate] = [];
@@ -48,11 +60,28 @@ export default function CalendarView({ onAddTaskForDate }) {
     const dateStr = formatDate(year, month, d);
     const dayTasks = tasksByDate[dateStr] || [];
 
+    const cellDate = new Date(year, month, d);
+    cellDate.setHours(0, 0, 0, 0);
+
+    const isToday =
+    cellDate.getTime() === todayDateOnly.getTime();
+
+    const isPast = cellDate < todayDateOnly;
+
+    const classNames = ['calendar-cell'];
+    if (isToday) classNames.push('today');
+    if (isPast) classNames.push('past');
+
     cells.push(
       <button
         key={dateStr}
-        className="calendar-cell"
-        onClick={() => onAddTaskForDate(dateStr)}
+        className={classNames.join(' ')}
+        onClick={() => {
+          if (!isPast) {
+            onAddTaskForDate(dateStr);
+          }
+        }}
+        disabled={isPast}
       >
         <div className="calendar-day-number">{d}</div>
 
